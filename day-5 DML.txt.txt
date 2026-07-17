@@ -1,0 +1,148 @@
+
+mysql> desc tables;
+ERROR 1046 (3D000): No database selected
+mysql> use da4;
+Database changed
+mysql> desc tables;
+ERROR 1146 (42S02): Table 'da4.tables' doesn't exist
+mysql> desc EMPLOYEES;
+ERROR 1146 (42S02): Table 'da4.employees' doesn't exist
+mysql> DESC CODEGNAN;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| FIRSTNAME | varchar(80) | YES  |     | NULL    |       |
+| DOB       | date        | YES  |     | NULL    |       |
+| LOCATION  | tinytext    | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> ALTER TABLE CODEGNAN CHANGE TO EMPLOYEES;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TO EMPLOYEES' at line 1
+mysql> ALTER TABLE CODEGNAN RENAME TO EMPLOYEES;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> DESC EMPLOYEES
+    -> ;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| FIRSTNAME | varchar(80) | YES  |     | NULL    |       |
+| DOB       | date        | YES  |     | NULL    |       |
+| LOCATION  | tinytext    | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+       ^C
+mysql> INSERT INTO EMPLOYEES(FIRSTNAME,DOB,LOCATION)VALUES('SHIVA','2005-04-22','KKD'),('GOPI','2008-02-05','KKD');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEES;
++-----------+------------+----------+
+| FIRSTNAME | DOB        | LOCATION |
++-----------+------------+----------+
+| SHIVA     | 2005-04-22 | KKD      |
+| GOPI      | 2008-02-05 | KKD      |
++-----------+------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> INSERT INTO EMPLOYEES(FIRSTNAME,DOB,LOCATION)VALUES('RAJU','2007-03-23','HYD');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM EMPLOYEES;
++-----------+------------+----------+
+| FIRSTNAME | DOB        | LOCATION |
++-----------+------------+----------+
+| SHIVA     | 2005-04-22 | KKD      |
+| GOPI      | 2008-02-05 | KKD      |
+| RAJU      | 2007-03-23 | HYD      |
++-----------+------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> ALTER TABLE EMPLOYEES ADD COLUMN AGE AFTER DOB;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AFTER DOB' at line 1
+mysql> ALTER TABLE EMPLOYEES ADD COLUMN AGE INT AFTER DOB;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEES;
++-----------+------------+------+----------+
+| FIRSTNAME | DOB        | AGE  | LOCATION |
++-----------+------------+------+----------+
+| SHIVA     | 2005-04-22 | NULL | KKD      |
+| GOPI      | 2008-02-05 | NULL | KKD      |
+| RAJU      | 2007-03-23 | NULL | HYD      |
++-----------+------------+------+----------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO EMPLOYESS(AGE)VALUES(20),(19),(25);
+ERROR 1146 (42S02): Table 'da4.employess' doesn't exist
+mysql> INSERT INTO EMPLOYESS(AGE)VALUES(20);
+ERROR 1146 (42S02): Table 'da4.employess' doesn't exist
+mysql> INSERT INTO EMPLOYEES(AGE)VALUES(20),(19),(25);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEES;
++-----------+------------+------+----------+
+| FIRSTNAME | DOB        | AGE  | LOCATION |
++-----------+------------+------+----------+
+| SHIVA     | 2005-04-22 | NULL | KKD      |
+| GOPI      | 2008-02-05 | NULL | KKD      |
+| RAJU      | 2007-03-23 | NULL | HYD      |
+| NULL      | NULL       |   20 | NULL     |
+| NULL      | NULL       |   19 | NULL     |
+| NULL      | NULL       |   25 | NULL     |
++-----------+------------+------+----------+
+6 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEES SET AGE=17 WHERE FIRSTNAME='SHIVA';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE EMPLOYEES SET AGE=11 WHERE FIRSTNAME='GOPI';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE EMPLOYEES SET AGE=15 WHERE FIRSTNAME='RAJU';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> DELETE FROM EMPLOYEES WHERE FIRSTNAME IS NULL;
+Query OK, 3 rows affected (0.01 sec)
+
+mysql> SELECT * FROM EMPLOYEES;
++-----------+------------+------+----------+
+| FIRSTNAME | DOB        | AGE  | LOCATION |
++-----------+------------+------+----------+
+| SHIVA     | 2005-04-22 |   17 | KKD      |
+| GOPI      | 2008-02-05 |   11 | KKD      |
+| RAJU      | 2007-03-23 |   15 | HYD      |
++-----------+------------+------+----------+
+3 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEES SET LOCATION='VIJ' WHERE FIRSTNAME='SHIVA';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEES;
++-----------+------------+------+----------+
+| FIRSTNAME | DOB        | AGE  | LOCATION |
++-----------+------------+------+----------+
+| SHIVA     | 2005-04-22 |   17 | VIJ      |
+| GOPI      | 2008-02-05 |   11 | KKD      |
+| RAJU      | 2007-03-23 |   15 | HYD      |
++-----------+------------+------+----------+
+3 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEES SET AGE=16 WHERE LOCATION='HYD';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEES WHERE LOCATION='HYD';
++-----------+------------+------+----------+
+| FIRSTNAME | DOB        | AGE  | LOCATION |
++-----------+------------+------+----------+
+| RAJU      | 2007-03-23 |   16 | HYD      |
++-----------+------------+------+----------+
+1 row in set (0.00 sec)
