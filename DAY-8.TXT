@@ -1,0 +1,268 @@
+CONSTRAINTS
+===========
+THESE ARE RULES APPLIED TO THE TABLE COLUMNS IN MYSQL TO ENSURE ONLY VALID AND ACCURATE DATA OS STORED IN THE DATABASE.
+
+IN SIMPLE words:
+constraints=rules that control the data entered into a table.
+
+why do we use constraints
+-------------------------
+1.maintain data integrity
+2.prevent invalid data entry
+3.avoid duplicate records.
+4.ensure relationships between tables.
+5.make the database reliable and consistent.
+
+1.not null:-dosen't allow null values.
+
+2.unique:-doesn't allow duplicate values.
+
+3.primary key:-COMBINATION OF UNIQUE AND NOTNULL.
+
+4.composite key:-COMBINATION OF MULTIPLE PRIMARY KEYS.
+
+5.default:- 
+
+6.foreign key:-IT IS A FIELD or collection of fields in one table that refers to the primary key in another table.
+ the table containing the foreign key is called the child table and the table containing the candidate key is called as referenced table or        parent table.
+
+7.check
+8.auto increment only used for integers.
+
+
+
+what is referential actions
+---------------------------
+referential actions defines what happens to child table data when parent table data is deleted or updated.
+
+on delete cascade
+on update cascade
+ 
+on delete set null;
+on update set null;
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| 43sd432            |
+| _____              |
+| da                 |
+| da4                |
+| da_4               |
+| information_schema |
+| lock_demo          |
+| mysql              |
+| performance_schema |
+| pfs4               |
+| sanjaykumar        |
+| sys                |
++--------------------+
+12 rows in set (0.15 sec)
+
+mysql> USE DA;
+Database changed
+mysql> SHOW TABLES;
++-----------------+
+| Tables_in_da    |
++-----------------+
+| backupemployees |
+| employee        |
+| employees       |
+| pro             |
+| products        |
+| students        |
++-----------------+
+6 rows in set (0.03 sec)
+
+mysql> CREATE TABLE STUDENT(SID INT NOTNULL,SNAME VARCHAR(40),MARKS INT(3));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NOTNULL,SNAME VARCHAR(40),MARKS INT(3))' at line 1
+mysql> CREATE TABLE STUDENT(SID INT NOTNULL,SNAME VARCHAR(40),MARKS INT(3));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NOTNULL,SNAME VARCHAR(40),MARKS INT(3))' at line 1
+mysql> ^C
+mysql> CREATE TABLE S
+    -> CREATE TABLE S(
+    -> EMPID CHAR(5) PRIMARY KEY,
+    -> EMPNAME VARCHAR(30),
+    -> EMPSALARY DECIMAL(20,2)
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TABLE S(
+EMPID CHAR(5) PRIMARY KEY,
+EMPNAME VARCHAR(30),
+EMPSALARY DECIMA' at line 2
+mysql> CREATE TABLE EMP(
+    -> EMPID CHAR(5) PRIMARY KEY,
+    -> EMPNAME VARCHAR(30),
+    -> EMPSALARY DECIMAL(20,2)
+    -> );
+Query OK, 0 rows affected (0.20 sec)
+
+mysql> INSERT INTO (EMPNAME,EMPSALARY)VALUES('SANJAY',123456.54);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(EMPNAME,EMPSALARY)VALUES('SANJAY',123456.54)' at line 1
+mysql> INSERT INTO EMP(EMPNAME,EMPSALARY)VALUES('SANJAY',123456.54);
+ERROR 1364 (HY000): Field 'EMPID' doesn't have a default value
+mysql> INSERT INTO EMP(EMPNAME,EMPSALARY)VALUES('SANJAY',123456.54);
+ERROR 1364 (HY000): Field 'EMPID' doesn't have a default value
+mysql> ^C
+mysql> CREATE TABLE Products (
+    ->  id INT,
+    ->  name VARCHAR(100),
+    ->  price DECIMAL(10,2),
+    ->  qty INT
+    ->  );
+ERROR 1050 (42S01): Table 'products' already exists
+mysql> CREATE TABLE Products1 (
+    ->  id INT,
+    ->  name VARCHAR(100),
+    ->  price DECIMAL(10,2),
+    ->  qty INT
+    ->  );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> INSERT INTO Products VALUES
+    ->  (1, 'Pen', 10.00, 100),
+    ->  (2, 'Notebook', 25.00, 50),
+    ->  (3, 'Pencil', 5.00, 200),
+    ->  (4, 'Eraser', 3.00, 300),
+    ->  (5, 'Marker', 15.00, 80),
+    ->  (6, 'Scale', 20.00, 150),
+    ->  (7, 'Sharpener', 8.00, 120),
+    ->  (8, 'Geometry Box', 120.00, 40),
+    ->  (9, 'Sketch Pen', 60.00, 75),
+    ->  (10, 'Crayons', 90.00, 55);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO Products1 VALUES
+    ->  (1, 'Pen', 10.00, 100),
+    ->  (2, 'Notebook', 25.00, 50),
+    ->  (3, 'Pencil', 5.00, 200),
+    ->  (4, 'Eraser', 3.00, 300),
+    ->  (5, 'Marker', 15.00, 80),
+    ->  (7, 'Sharpener', 8.00, 120),
+    ->  (6, 'Scale', 20.00, 150),
+    ->  (8, 'Geometry Box', 120.00, 40),
+    ->  (9, 'Sketch Pen', 60.00, 75),
+    ->  (10, 'Crayons', 90.00, 55);
+Query OK, 10 rows affected (0.04 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select*from products1;
++------+--------------+--------+------+
+| id   | name         | price  | qty  |
++------+--------------+--------+------+
+|    1 | Pen          |  10.00 |  100 |
+|    2 | Notebook     |  25.00 |   50 |
+|    3 | Pencil       |   5.00 |  200 |
+|    4 | Eraser       |   3.00 |  300 |
+|    5 | Marker       |  15.00 |   80 |
+|    7 | Sharpener    |   8.00 |  120 |
+|    6 | Scale        |  20.00 |  150 |
+|    8 | Geometry Box | 120.00 |   40 |
+|    9 | Sketch Pen   |  60.00 |   75 |
+|   10 | Crayons      |  90.00 |   55 |
++------+--------------+--------+------+
+10 rows in set (0.01 sec)
+
+mysql> select name,price,price+(price*0.12) as price_with_tax from products1;
++--------------+--------+----------------+
+| name         | price  | price_with_tax |
++--------------+--------+----------------+
+| Pen          |  10.00 |        11.2000 |
+| Notebook     |  25.00 |        28.0000 |
+| Pencil       |   5.00 |         5.6000 |
+| Eraser       |   3.00 |         3.3600 |
+| Marker       |  15.00 |        16.8000 |
+| Sharpener    |   8.00 |         8.9600 |
+| Scale        |  20.00 |        22.4000 |
+| Geometry Box | 120.00 |       134.4000 |
+| Sketch Pen   |  60.00 |        67.2000 |
+| Crayons      |  90.00 |       100.8000 |
++--------------+--------+----------------+
+10 rows in set (0.01 sec)
+
+mysql> select name,price,price-5 as discounted_price from products1;
++--------------+--------+------------------+
+| name         | price  | discounted_price |
++--------------+--------+------------------+
+| Pen          |  10.00 |             5.00 |
+| Notebook     |  25.00 |            20.00 |
+| Pencil       |   5.00 |             0.00 |
+| Eraser       |   3.00 |            -2.00 |
+| Marker       |  15.00 |            10.00 |
+| Sharpener    |   8.00 |             3.00 |
+| Scale        |  20.00 |            15.00 |
+| Geometry Box | 120.00 |           115.00 |
+| Sketch Pen   |  60.00 |            55.00 |
+| Crayons      |  90.00 |            85.00 |
++--------------+--------+------------------+
+10 rows in set (0.01 sec)
+
+mysql> select name,price,price*qty as inventory_price from products1;
++--------------+--------+-----------------+
+| name         | price  | inventory_price |
++--------------+--------+-----------------+
+| Pen          |  10.00 |         1000.00 |
+| Notebook     |  25.00 |         1250.00 |
+| Pencil       |   5.00 |         1000.00 |
+| Eraser       |   3.00 |          900.00 |
+| Marker       |  15.00 |         1200.00 |
+| Sharpener    |   8.00 |          960.00 |
+| Scale        |  20.00 |         3000.00 |
+| Geometry Box | 120.00 |         4800.00 |
+| Sketch Pen   |  60.00 |         4500.00 |
+| Crayons      |  90.00 |         4950.00 |
++--------------+--------+-----------------+
+10 rows in set (0.00 sec)
+
+mysql> select name,price,price*qty as inventory_price from products1;
++--------------+--------+-----------------+
+| name         | price  | inventory_price |
++--------------+--------+-----------------+
+| Pen          |  10.00 |         1000.00 |
+| Notebook     |  25.00 |         1250.00 |
+| Pencil       |   5.00 |         1000.00 |
+| Eraser       |   3.00 |          900.00 |
+| Marker       |  15.00 |         1200.00 |
+| Sharpener    |   8.00 |          960.00 |
+| Scale        |  20.00 |         3000.00 |
+| Geometry Box | 120.00 |         4800.00 |
+| Sketch Pen   |  60.00 |         4500.00 |
+| Crayons      |  90.00 |         4950.00 |
++--------------+--------+-----------------+
+10 rows in set (0.00 sec)
+
+mysql> select name,price,price*10 as price from products1;
++--------------+--------+---------+
+| name         | price  | price   |
++--------------+--------+---------+
+| Pen          |  10.00 |  100.00 |
+| Notebook     |  25.00 |  250.00 |
+| Pencil       |   5.00 |   50.00 |
+| Eraser       |   3.00 |   30.00 |
+| Marker       |  15.00 |  150.00 |
+| Sharpener    |   8.00 |   80.00 |
+| Scale        |  20.00 |  200.00 |
+| Geometry Box | 120.00 | 1200.00 |
+| Sketch Pen   |  60.00 |  600.00 |
+| Crayons      |  90.00 |  900.00 |
++--------------+--------+---------+
+10 rows in set (0.00 sec)
+
+mysql> select name,price,qty,(qty%50!=0) as qty1 from products1;
++--------------+--------+------+------+
+| name         | price  | qty  | qty1 |
++--------------+--------+------+------+
+| Pen          |  10.00 |  100 |    0 |
+| Notebook     |  25.00 |   50 |    0 |
+| Pencil       |   5.00 |  200 |    0 |
+| Eraser       |   3.00 |  300 |    0 |
+| Marker       |  15.00 |   80 |    1 |
+| Sharpener    |   8.00 |  120 |    1 |
+| Scale        |  20.00 |  150 |    0 |
+| Geometry Box | 120.00 |   40 |    1 |
+| Sketch Pen   |  60.00 |   75 |    1 |
+| Crayons      |  90.00 |   55 |    1 |
++--------------+--------+------+------+
+10 rows in set (0.01 sec)
+
+mysql>
+
