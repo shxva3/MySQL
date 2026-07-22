@@ -1,0 +1,508 @@
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| 43sd432            |
+| _____              |
+| da4                |
+| da_4               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| pfs4               |
+| sanjaykumar        |
+| sys                |
++--------------------+
+10 rows in set (0.01 sec)
+
+mysql> USE PFS4;
+Database changed
+mysql> SHOW TABLES;
++----------------+
+| Tables_in_pfs4 |
++----------------+
+| company_staff  |
+| employees      |
++----------------+
+2 rows in set (0.02 sec)
+
+mysql> CREATE DATABASE DA;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE DA;
+Database changed
+mysql> CREATE TABLE EMPLOYEES;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> CREATE TABLE EMPLOYEES(EMPID INT,NAME VARCHAR(50),DEPT VARCHAR(46));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> SELECT*FROM EMPLOYEES;
+Empty set (0.01 sec)
+
+mysql> DESC EMPLOYEES;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| EMPID | int         | YES  |     | NULL    |       |
+| NAME  | varchar(50) | YES  |     | NULL    |       |
+| DEPT  | varchar(46) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.03 sec)
+
+mysql> INSERT INTO EMPLOYEES
+    -> VALUES
+    -> ('SANJAYA','PY')
+    -> ('ROCKY','PY')
+    -> ('SMILEY','PY');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '('ROCKY','PY')
+('SMILEY','PY')' at line 4
+mysql> INSERT INTO EMPLOYEES
+    -> VALUES
+    -> ('SANJAYA','PY'),
+    -> ('ROCKY','PY'),
+    -> ('SMILEY','PY');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO EMPLOYEES (NAME,DEPT)
+    -> VALUES
+    -> ('SANJAYA','PY'),
+    -> ('ROCKY','PY'),
+    -> ('SMILEY','PY');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT*FROM EMPLOYEES;
++-------+---------+------+
+| EMPID | NAME    | DEPT |
++-------+---------+------+
+|  NULL | SANJAYA | PY   |
+|  NULL | ROCKY   | PY   |
+|  NULL | SMILEY  | PY   |
++-------+---------+------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE EMPLOYEES(EMPID INT,NAME VARCHAR(50),DEPT VARCHAR(46));
+ERROR 1050 (42S01): Table 'employees' already exists
+mysql> ^C
+mysql> DELETE TABLE EMPLOYEES;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TABLE EMPLOYEES' at line 1
+mysql> DELETE  EMPLOYEES;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> DROP DATABASE DA;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| 43sd432            |
+| _____              |
+| da4                |
+| da_4               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| pfs4               |
+| sanjaykumar        |
+| sys                |
++--------------------+
+10 rows in set (0.01 sec)
+
+mysql> CREATE DATABASE DA;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE DA;
+Database changed
+mysql> CREATE TABLE EMPLOYEES(EMPID INT AUTO_INCREMENT PRIMARY KEY,NAME VARCHAR(50),DEPT VARCHAR(46));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO EMPLOYEES
+    -> (NAME,DEPT)
+    -> VALUES
+    -> ('SANJAY','PY')
+    -> ('ROCKY','JAVA')^C
+mysql> CREATE TABLE EMPLOYEES(EMPID INT AUTO_INCREMENT PRIMARY KEY,NAME VARCHAR(50),DEPT VARCHAR(46));
+ERROR 1050 (42S01): Table 'employees' already exists
+mysql> INSERT INTO EMPLOYEES
+    -> (NAME,DEPT)
+    -> VALUES
+    -> ('SANJAY','PY'),
+    -> ('ROCKY','JAVA'),
+    -> ('SMILEY','PY');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT*FROM EMPLOYEES;
++-------+--------+------+
+| EMPID | NAME   | DEPT |
++-------+--------+------+
+|     1 | SANJAY | PY   |
+|     2 | ROCKY  | JAVA |
+|     3 | SMILEY | PY   |
++-------+--------+------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE BACKUPEMPLOYEES AS SELECT *FROM EMPLOYEES;
+Query OK, 3 rows affected (0.03 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SHOW TABLES;
++-----------------+
+| Tables_in_da    |
++-----------------+
+| backupemployees |
+| employees       |
++-----------------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT*FROM BACKUPEMPLOYEES;
++-------+--------+------+
+| EMPID | NAME   | DEPT |
++-------+--------+------+
+|     1 | SANJAY | PY   |
+|     2 | ROCKY  | JAVA |
+|     3 | SMILEY | PY   |
++-------+--------+------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE PRODUCTS(PRODUCTID INT AUTO_INCREMENT PRIMARY KEY,
+    -> PRODUCTNAME VARCHAR(50),
+    -> PRICE DECIMAL(10,2),
+    -> QUANTITY INT,
+    -> TOTAL DECIMAL(10,2) GENERATED ALWAYS AS(PRICE*QUANTITY)STORED);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO PRODUCTS
+    -> VALUES
+    -> (PRODUCTNAME^C
+mysql> INSERT INTO PRODUCTS (PRODUCTNAME,PRICE,QUANTITY)
+    -> VALUES
+    -> ('CAR',234576.45,6),
+    -> ('BIKE',456576.45,7),
+    -> ('AEROPLANE',123456576.45,10);
+ERROR 1264 (22003): Out of range value for column 'PRICE' at row 3
+mysql> ('AEROPLANE',1234565.45,10);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''AEROPLANE',1234565.45,10)' at line 1
+mysql> INSERT INTO PRODUCTS (PRODUCTNAME,PRICE,QUANTITY)
+    -> VALUES
+    -> ('CAR',234576.45,6),
+    -> ('BIKE',456576.45,7),
+    -> ('AEROPLANE',123456576.45,10);
+ERROR 1264 (22003): Out of range value for column 'PRICE' at row 3
+mysql> ('AEROPLANE',123456.45,10);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''AEROPLANE',123456.45,10)' at line 1
+mysql> INSERT INTO PRODUCTS (PRODUCTNAME,PRICE,QUANTITY)
+    -> VALUES
+    -> ('CAR',234576.45,6),
+    -> ('BIKE',456576.45,7),
+    -> ('AEROPLANE',456576.45,10);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT*FROM PRODUCTS;
++-----------+-------------+-----------+----------+------------+
+| PRODUCTID | PRODUCTNAME | PRICE     | QUANTITY | TOTAL      |
++-----------+-------------+-----------+----------+------------+
+|         7 | CAR         | 234576.45 |        6 | 1407458.70 |
+|         8 | BIKE        | 456576.45 |        7 | 3196035.15 |
+|         9 | AEROPLANE   | 456576.45 |       10 | 4565764.50 |
++-----------+-------------+-----------+----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT*FROM PRODUCTS WHERE PRODUCTID(NULL);
+ERROR 1305 (42000): FUNCTION da.PRODUCTID does not exist
+mysql> SHOW TABLES;
++-----------------+
+| Tables_in_da    |
++-----------------+
+| backupemployees |
+| employees       |
+| products        |
++-----------------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE STUDENTS(SID INT AUTO_INCREMENT PRIMARYKEY,SNAME VARCHAR(20),SMOBILE VARCHAR(10),SMARKS INT(3));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'PRIMARYKEY,SNAME VARCHAR(20),SMOBILE VARCHAR(10),SMARKS INT(3))' at line 1
+mysql> CREATE TABLE STUDENTS(SID INT AUTO_INCREMENT PRIMARYKEY,SNAME VARCHAR(20),SMOBILE VARCHAR(10),SMARKS INT(3));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'PRIMARYKEY,SNAME VARCHAR(20),SMOBILE VARCHAR(10),SMARKS INT(3))' at line 1
+mysql> CREATE TABLE STUDENTS(SID INT AUTO_INCREMENT PRIMARYKEY,SNAME VARCHAR(20),SMOBILE VARCHAR(10),SMARKS INT(3));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'PRIMARYKEY,SNAME VARCHAR(20),SMOBILE VARCHAR(10),SMARKS INT(3))' at line 1
+mysql> CREATE TABLE STUDENTS(SID INT AUTO_INCREMENT PRIMARYKEY,SNAME VARCHAR(20),SMOBILE VARCHAR(10),SMARKS INT(3));^C
+mysql> ^C
+mysql> CREATE TABLE STUDENTS
+    -> (SID INT AUTO_INCREMENT PRIMARY KEY,
+    -> SNAME VARCHAR(50),
+    -> SMOBILE VARCHAR(10),
+    -> SMARKS INT(3)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+
+mysql> INSERT INTO STUDENTS(SNAME,SMOBILE,SMARKS)
+    -> VALUES
+    -> ('SUN','2345654356',78),
+    -> ('MOON','1235654356',88),
+    -> ('STAR','4565654356',98),
+    -> ('ROXK','1234654356',100);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT*FROM STUDENTS;
++-----+-------+------------+--------+
+| SID | SNAME | SMOBILE    | SMARKS |
++-----+-------+------------+--------+
+|   1 | SUN   | 2345654356 |     78 |
+|   2 | MOON  | 1235654356 |     88 |
+|   3 | STAR  | 4565654356 |     98 |
+|   4 | ROXK  | 1234654356 |    100 |
++-----+-------+------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE USER ROCKY IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE USER SUNNY IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER BUNNY IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER VINNY IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER PINKY IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER VARMA IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER LOKI IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER YOGESH IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER JASSU IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER SMILEY IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT SELECT,UPDATE ON STUDENTS TO SUNNY;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT SELECT,UPDATE ON STUDENTS TO BUNNY;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT SELECT ON STUDENTS TO ;^C
+mysql> GRANT SELECT,UPDATE,DELETE,DROP,INSERT ON STUDENTS TO ROCKY;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT SELECT ON STUDENTS TO YOGESH;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT ALL PRVIVILEGES ON STUDENTS TO ROCKY;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'PRVIVILEGES ON STUDENTS TO ROCKY' at line 1
+mysql> GRANT ALL PRIVILEGES ON STUDENTS TO ROCKY;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT SELECT ON STUDENTS TO LOKI;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> REVOKE ALL PRVIVILEGES ON STUDENTS TO YOGESH;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'PRVIVILEGES ON STUDENTS TO YOGESH' at line 1
+mysql> REVOKE ALL PRVIVILEGES ON STUDENTS TO LOKI;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'PRVIVILEGES ON STUDENTS TO LOKI' at line 1
+mysql> GRANT SELECT,INSERT ON STUDENTS TO LOKI;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT SELECT,INSERT ON STUDENTS TO YOGESH;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> REVOKE SELECT,INSERT ON STUDENTS TO YOGESH;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TO YOGESH' at line 1
+mysql> REVOKE SELECT,INSERT ON STUDENTS TO LOKI;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TO LOKI' at line 1
+mysql> REVOKE INSERT ON STUDENTS TO LOKI;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TO LOKI' at line 1
+mysql> REVOKE INSERT ON STUDENTS TO LOKI;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TO LOKI' at line 1
+mysql> REVOKE INSERT ON STUDENTS TO YOGESH;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TO YOGESH' at line 1
+mysql>
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| 43sd432            |
+| _____              |
+| da                 |
+| da4                |
+| da_4               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| pfs4               |
+| sanjaykumar        |
+| sys                |
++--------------------+
+11 rows in set (0.06 sec)
+
+mysql> USE DA;
+Database changed
+mysql> SHOW TABLES;
++-----------------+
+| Tables_in_da    |
++-----------------+
+| backupemployees |
+| employees       |
+| products        |
+| students        |
++-----------------+
+4 rows in set (0.01 sec)
+
+mysql> DESC EMPLOYEES;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| EMPID | int         | NO   | PRI | NULL    | auto_increment |
+| NAME  | varchar(50) | YES  |     | NULL    |                |
+| DEPT  | varchar(46) | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+3 rows in set (0.02 sec)
+
+mysql> DESC PRODUCTS;
++-------------+---------------+------+-----+---------+------------------+
+| Field       | Type          | Null | Key | Default | Extra            |
++-------------+---------------+------+-----+---------+------------------+
+| PRODUCTID   | int           | NO   | PRI | NULL    | auto_increment   |
+| PRODUCTNAME | varchar(50)   | YES  |     | NULL    |                  |
+| PRICE       | decimal(10,2) | YES  |     | NULL    |                  |
+| QUANTITY    | int           | YES  |     | NULL    |                  |
+| TOTAL       | decimal(10,2) | YES  |     | NULL    | STORED GENERATED |
++-------------+---------------+------+-----+---------+------------------+
+5 rows in set (0.01 sec)
+
+mysql> SELECT*FROM PRODUCTS;
++-----------+-------------+-----------+----------+------------+
+| PRODUCTID | PRODUCTNAME | PRICE     | QUANTITY | TOTAL      |
++-----------+-------------+-----------+----------+------------+
+|         7 | CAR         | 234576.45 |        6 | 1407458.70 |
+|         8 | BIKE        | 456576.45 |        7 | 3196035.15 |
+|         9 | AEROPLANE   | 456576.45 |       10 | 4565764.50 |
++-----------+-------------+-----------+----------+------------+
+3 rows in set (0.01 sec)
+
+mysql> SELECT*FROM EMPLOYEES;
++-------+--------+------+
+| EMPID | NAME   | DEPT |
++-------+--------+------+
+|     1 | SANJAY | PY   |
+|     2 | ROCKY  | JAVA |
+|     3 | SMILEY | PY   |
++-------+--------+------+
+3 rows in set (0.01 sec)
+
+mysql> CREATE TABLE PRO(PID INT AUTO_INCREMENT PRIMARY KEY,PNAME VARCHAR(50),PRICE DECIMAL(10,2),QUANTITY INT,TOTAL DECIMAL(10,2) ALWAYS GENERATED AS (PRICE*QUANTITY)STORED);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ALWAYS GENERATED AS (PRICE*QUANTITY)STORED)' at line 1
+mysql> CREATE TABLE PRO(PID INT AUTO_INCREMENT PRIMARY KEY,PNAME VARCHAR(50),PRICE DECIMAL(10,2),QUANTITY INT,TOTAL DECIMAL(10,2) ALWAYS GENERATED AS (PRICE*QUANTITY)STORED);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ALWAYS GENERATED AS (PRICE*QUANTITY)STORED)' at line 1
+mysql> CREATE TABLE PRO
+    -> (PID INT AUTO_INCREMENT PRIMARY KEY,
+    -> PNAME VARCHAR(50),
+    -> PPRICE DECIMAL(10,2),
+    -> PQUANTITY INT,
+    -> TOTAL DECIMAL(10,2) GENERATED ALWAYS AS (PPRICE*PQUANTITY) STORED);
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> DESC PRO;
++-----------+---------------+------+-----+---------+------------------+
+| Field     | Type          | Null | Key | Default | Extra            |
++-----------+---------------+------+-----+---------+------------------+
+| PID       | int           | NO   | PRI | NULL    | auto_increment   |
+| PNAME     | varchar(50)   | YES  |     | NULL    |                  |
+| PPRICE    | decimal(10,2) | YES  |     | NULL    |                  |
+| PQUANTITY | int           | YES  |     | NULL    |                  |
+| TOTAL     | decimal(10,2) | YES  |     | NULL    | STORED GENERATED |
++-----------+---------------+------+-----+---------+------------------+
+5 rows in set (0.01 sec)
+
+mysql> SELECT*FROM PRO;
+Empty set (0.01 sec)
+
+mysql> INSERT INTO PRO VALUES
+    -> ('ROCK',4365467.434,3);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO PRO (PNAME,PPRICE,PQUANTITY)VALUES
+    -> ('SANJAY',324567.43,4);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO PRO (PNAME,PPRICE,PQUANTITY)VALUES
+    -> ('ROCKY',123567.43,9);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO PRO (PNAME,PPRICE,PQUANTITY)VALUES
+    -> ('ROCK',678567.43,19)
+    -> ('SUN',353567.43,29)
+    -> ('MOON',1228567.43,39);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '('SUN',353567.43,29)
+('MOON',1228567.43,39)' at line 3
+mysql> INSERT INTO PRO (PNAME,PPRICE,PQUANTITY)VALUES
+    -> ('ROCK',678567.43,19),
+    -> ('SUN',353567.43,29),
+    -> ('MOON',1228567.43,39);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT*FROM PRO;
++-----+--------+------------+-----------+-------------+
+| PID | PNAME  | PPRICE     | PQUANTITY | TOTAL       |
++-----+--------+------------+-----------+-------------+
+|   1 | SANJAY |  324567.43 |         4 |  1298269.72 |
+|   2 | ROCKY  |  123567.43 |         9 |  1112106.87 |
+|   3 | ROCK   |  678567.43 |        19 | 12892781.17 |
+|   4 | SUN    |  353567.43 |        29 | 10253455.47 |
+|   5 | MOON   | 1228567.43 |        39 | 47914129.77 |
++-----+--------+------------+-----------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE USER ROCKY IDENTIFIED BY '3530';
+ERROR 1396 (HY000): Operation CREATE USER failed for 'ROCKY'@'%'
+mysql> CREATE USER ROCKY1 IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER YOGESH1 IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE USER LOKI1 IDENTIFIED BY '3530';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> GRANT SELECT ON PRO TO YOGESH1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT SELECT ON PRO TO LOKI1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT ALL PRIVILEGES ON PRO TO ROCKY1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT SELECT,INSERT ON PRO TO LOKI1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT SELECT,INSERT ON PRO TO YOGESH1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> REVOKE INSERT ON PRO TO YOGESH1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TO YOGESH1' at line 1
+mysql> REVOKE INSERT ON PRO FROM YOGESH1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> REVOKE INSERT ON PRO FROM LOKI1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> REVOKE ALL ON PRO FROM LOKI1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> REVOKE ALL ON PRO FROM YOGESH1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
